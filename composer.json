@@ -1,7 +1,7 @@
 {
     "name": "noobphp/request",
     "description": "simple request",
-    "keywords": ["noob","request"],
+    "keywords": ["noobphp","request","noob"],
     "license": "MIT",
     "authors": [
         {
@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Noob\\Http\\": "src"
+            "Noob\\Http\\": "src/"
         }
     },
     "minimum-stability": "dev"

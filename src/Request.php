@@ -2,7 +2,6 @@
 namespace Noob\Http;
 
 use Noob\Http\Lib\RequestDataParse;
-
 /**
  * Created by PhpStorm.
  * User: pxb
@@ -30,6 +29,21 @@ class Request
     public function isPost()
     {
         return $this->getRequestMethod() === 'POST';
+    }
+
+    public function isGet()
+    {
+        return $this->getRequestMethod() === 'GET';
+    }
+
+    public function isPut()
+    {
+        return $this->getRequestMethod() === 'PUT';
+    }
+
+    public function isDelete()
+    {
+        return $this->getRequestMethod() === 'DELETE';
     }
 
     public function getInput()
@@ -90,5 +104,19 @@ class Request
         } else {
             return null;
         }
+    }
+
+    /**
+     * 添加此魔术方法原因是在某些情况下需要判断属性是否为空或者存在
+     * 而isset() or empty()会触发的是此__isset魔术方法并不会触发__get
+     * @param $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        // TODO: Implement __isset() method.
+        if ($this->getAll()->offsetExists($name))
+            return true;
+        return false;
     }
 }
