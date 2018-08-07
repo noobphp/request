@@ -16,5 +16,6 @@
         "psr-4": {
             "Noob\\Http\\": "src"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
