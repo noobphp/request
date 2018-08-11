@@ -68,7 +68,7 @@ class Request
             $this->all = array_merge($_REQUEST, $input);
             //如果是空字符串设置值为null
             foreach ($this->all as $key => $value) {
-                if ((! is_numeric($value)) && empty($value)) {
+                if ($value === '') {
                     $this->all[$key] = null;
                 }
             }
@@ -99,11 +99,7 @@ class Request
     {
         // TODO: Implement __get() method.
         $all = $this->getAll();
-        if (isset($all[$name])) {
-            return $all[$name];
-        } else {
-            return null;
-        }
+        return isset($all[$name]) ? $all[$name] : null;
     }
 
     /**
@@ -115,8 +111,6 @@ class Request
     public function __isset($name)
     {
         // TODO: Implement __isset() method.
-        if ($this->getAll()->offsetExists($name))
-            return true;
-        return false;
+        return $this->getAll()->offsetExists($name);
     }
 }
