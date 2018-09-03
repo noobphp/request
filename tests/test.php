@@ -10,6 +10,8 @@ use Noob\Http\Request;
  * Time: 下午8:46
  */
 
+
+
 $request = new Request();
 
 var_dump($request->getRequestMethod());

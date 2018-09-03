@@ -13,8 +13,7 @@ use Noob\Http\Lib\RequestDataParse;
 class Request
 {
     protected $all = [];
-    protected $input = [];
-    protected $request = [];
+    protected $input = "";
 
     public function getRequestMethod()
     {
@@ -49,22 +48,15 @@ class Request
     public function getInput()
     {
         if (empty($this->input)) {
-            $this->input = file_get_contents('php://input') ?: [];
+            $this->input = file_get_contents('php://input');
         }
         return $this->input;
     }
 
-    public function getAll()
+    public function getAllArray()
     {
         if (empty($this->all)) {
-            $input = $this->getInput();
-            if (is_string($input)) {
-                if ($decode_json = json_decode($input, true)) {
-                    $input = $decode_json;
-                } else {
-                    $input = [];
-                }
-            }
+            $input = json_decode($this->getInput(), true) ?: [];
             $this->all = array_merge($_REQUEST, $input);
             //如果是空字符串设置值为null
             foreach ($this->all as $key => $value) {
@@ -73,21 +65,21 @@ class Request
                 }
             }
         }
-        return new RequestDataParse($this->all);
+        return $this->all;
+    }
+
+    public function getAll()
+    {
+        return new RequestDataParse($this->getAllArray());
     }
 
     public function only(array $filter)
     {
-        $all = $this->getAll();
-        $only = [];
-        if (! empty($all)) {
-            foreach ($filter as $f) {
-                if (array_key_exists($f, $all)) {
-                    $only[$f] = $all[$f];
-                }
-            }
-        }
-        return new RequestDataParse($only);
+        $data = $this->getAllArray();
+        $data = array_filter($data, function ($key) use ($filter) {
+            return in_array($key, $filter);
+        }, ARRAY_FILTER_USE_KEY);
+        return new RequestDataParse($data);
     }
 
     public function isWeiXinClient()
@@ -98,7 +90,7 @@ class Request
     public function __get($name)
     {
         // TODO: Implement __get() method.
-        $all = $this->getAll();
+        $all = $this->getAllArray();
         return isset($all[$name]) ? $all[$name] : null;
     }
 
@@ -111,6 +103,6 @@ class Request
     public function __isset($name)
     {
         // TODO: Implement __isset() method.
-        return $this->getAll()->offsetExists($name);
+        return isset($this->getAllArray()[$name]);
     }
 }
